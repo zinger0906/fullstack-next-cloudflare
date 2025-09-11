@@ -100,6 +100,13 @@ pnpm run db:generate
 pnpm run db:migrate:local
 ```
 
+Or if you want to custom name the migration file, you can do it with
+
+```bash
+pnpm run db:generate:named "migration_name" # e.g., add todo table
+pnpm run db:migrate:local
+```
+
 ## 4. Development
 
 ### Generate TypeScript types

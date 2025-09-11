@@ -13,6 +13,7 @@
         "deploy": "npx @opennextjs/cloudflare build && npx @opennextjs/cloudflare deploy",
         "preview": "npx @opennextjs/cloudflare build && npx @opennextjs/cloudflare preview",
         "db:generate": "drizzle-kit generate",
+        "db:generate:named": "drizzle-kit generate --name",
         "db:migrate:local": "wrangler d1 migrations apply next-cf-app --local",
         "db:migrate:prod": "wrangler d1 migrations apply next-cf-app --remote",
         "db:inspect:local": "wrangler d1 execute next-cf-app --local --command=\"SELECT name FROM sqlite_master WHERE type='table';\"",
