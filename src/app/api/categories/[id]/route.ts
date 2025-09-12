@@ -1,0 +1,97 @@
+import { type NextRequest, NextResponse } from "next/server";
+import { getCategoryById, updateCategory } from "@/server/categories.server";
+
+type Params = {
+    params: Promise<{ id: string }>;
+};
+
+export async function GET(_: NextRequest, { params }: Params) {
+    try {
+        const { id } = await params;
+        const categoryId = parseInt(id, 10);
+
+        if (Number.isNaN(categoryId)) {
+            return NextResponse.json(
+                { success: false, error: "Invalid category ID" },
+                { status: 400 },
+            );
+        }
+
+        const category = await getCategoryById(categoryId);
+
+        if (!category) {
+            return NextResponse.json(
+                { success: false, error: "Category not found" },
+                { status: 404 },
+            );
+        }
+
+        return NextResponse.json({ success: true, data: category });
+    } catch (error: any) {
+        console.error("Error fetching category:", error);
+
+        if (error.name === "ZodError") {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Validation error",
+                    details: error.errors,
+                },
+                { status: 400 },
+            );
+        }
+
+        return NextResponse.json(
+            { success: false, error: "Failed to fetch category" },
+            { status: 500 },
+        );
+    }
+}
+
+export async function PUT(request: NextRequest, { params }: Params) {
+    try {
+        const { id } = await params;
+        const categoryId = parseInt(id, 10);
+
+        if (Number.isNaN(categoryId)) {
+            return NextResponse.json(
+                { success: false, error: "Invalid category ID" },
+                { status: 400 },
+            );
+        }
+
+        const body = await request.json();
+        const category = await updateCategory(categoryId, body);
+
+        if (!category) {
+            return NextResponse.json(
+                { success: false, error: "Category not found" },
+                { status: 404 },
+            );
+        }
+
+        return NextResponse.json({
+            success: true,
+            data: category,
+            message: "Category updated successfully",
+        });
+    } catch (error: any) {
+        console.error("Error updating category:", error);
+
+        if (error.name === "ZodError") {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Validation error",
+                    details: error.errors,
+                },
+                { status: 400 },
+            );
+        }
+    }
+
+    return NextResponse.json(
+        { success: false, error: "Failed to update category" },
+        { status: 500 },
+    );
+}
