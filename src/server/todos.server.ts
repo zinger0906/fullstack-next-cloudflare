@@ -5,7 +5,8 @@ import {
     type Todo,
     todos,
     updateTodoSchema,
-} from "@/libs/db/todo.schema";
+} from "@/libs/db/schemas/todo.schema";
+import { type UploadResult, uploadToR2 } from "@/libs/storage/r2";
 
 export async function getAllTodos(): Promise<Todo[]> {
     const db = await getDb();
@@ -22,14 +23,38 @@ export async function getTodoById(id: number): Promise<Todo | null> {
     return result[0] || null;
 }
 
-export async function createTodo(data: unknown): Promise<Todo> {
+export async function createTodo(
+    data: unknown,
+    imageFile?: File,
+): Promise<Todo> {
     const validatedData = insertTodoSchema.parse(data);
+
+    // Handle optional image upload
+    let imageUrl: string | undefined;
+    let imageAlt: string | undefined;
+
+    if (imageFile) {
+        const uploadResult: UploadResult = await uploadToR2(
+            imageFile,
+            "todo-images",
+        );
+
+        if (uploadResult.success && uploadResult.url) {
+            imageUrl = uploadResult.url;
+            imageAlt = validatedData.imageAlt || imageFile.name;
+        } else {
+            // Log error but don't fail the todo creation
+            console.error("Image upload failed:", uploadResult.error);
+        }
+    }
 
     const db = await getDb();
     const result = await db
         .insert(todos)
         .values({
             ...validatedData,
+            imageUrl: imageUrl || validatedData.imageUrl,
+            imageAlt: imageAlt || validatedData.imageAlt,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         })
@@ -41,14 +66,37 @@ export async function createTodo(data: unknown): Promise<Todo> {
 export async function updateTodo(
     id: number,
     data: unknown,
+    imageFile?: File,
 ): Promise<Todo | null> {
     const validatedData = updateTodoSchema.parse(data);
+
+    // Handle optional image upload
+    let imageUrl: string | undefined;
+    let imageAlt: string | undefined;
+
+    if (imageFile) {
+        const uploadResult: UploadResult = await uploadToR2(
+            imageFile,
+            "todo-images",
+        );
+
+        if (uploadResult.success && uploadResult.url) {
+            imageUrl = uploadResult.url;
+            imageAlt = validatedData.imageAlt || imageFile.name;
+        } else {
+            // Log error but don't fail the todo update
+            console.error("Image upload failed:", uploadResult.error);
+        }
+    }
 
     const db = await getDb();
     const result = await db
         .update(todos)
         .set({
             ...validatedData,
+            // Only update image fields if we have new values
+            ...(imageUrl && { imageUrl }),
+            ...(imageAlt && { imageAlt }),
             updatedAt: new Date().toISOString(),
         })
         .where(eq(todos.id, id))

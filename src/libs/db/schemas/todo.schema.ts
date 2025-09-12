@@ -1,18 +1,20 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { TODO_VALIDATION_MESSAGES } from "../constants/validation.constant";
+import { TODO_VALIDATION_MESSAGES } from "../../constants/validation.constant";
 import {
     TodoPriority,
     type TodoPriorityType,
     TodoStatus,
     type TodoStatusType,
-} from "../enums/todo.enum";
+} from "../../enums/todo.enum";
+import { categories } from "./category.schema";
 
 export const todos = sqliteTable("todos", {
     id: integer("id").primaryKey({ autoIncrement: true }),
     title: text("title").notNull(),
     description: text("description"),
+    categoryId: integer("category_id").references(() => categories.id),
     status: text("status")
         .$type<TodoStatusType>()
         .notNull()
@@ -52,7 +54,7 @@ export const insertTodoSchema = createInsertSchema(todos, {
         .url(TODO_VALIDATION_MESSAGES.INVALID_IMAGE_URL)
         .optional()
         .or(z.literal("")),
-    imageAlt: z.string().datetime().optional().or(z.literal("")),
+    imageAlt: z.string().optional().or(z.literal("")),
     completed: z.boolean().optional(),
 });
 
