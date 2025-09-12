@@ -17,7 +17,7 @@ export const todos = sqliteTable("todos", {
         .$defaultFn(() => new Date().toISOString()),
 });
 
-// Zod shcemas for validation
+// Zod schemas for validation
 export const insertTodoSchema = createInsertSchema(todos, {
     title: z.string().min(1, "Title is required").max(255, "Title too long"),
     description: z.string().max(1000, "Description too long").optional(),
