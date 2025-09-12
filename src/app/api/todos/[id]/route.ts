@@ -53,8 +53,47 @@ export async function PUT(request: NextRequest, { params }: Params) {
             );
         }
 
-        const body = await request.json();
-        const todo = await updateTodo(todoId, body);
+        const contentType = request.headers.get("content-type");
+        let todoData: any;
+        let imageFile: File | undefined;
+
+        if (contentType?.includes("multipart/form-data")) {
+            // Handle FormData (with file upload)
+            const formData = await request.formData();
+
+            // Extract file if present
+            const file = formData.get("image") as File | null;
+            if (file && file.size > 0) {
+                imageFile = file;
+            }
+
+            // Extract other form fields and build todo data
+            todoData = {};
+            for (const [key, value] of formData.entries()) {
+                if (key !== "image") {
+                    // Handle boolean fields
+                    if (key === "completed") {
+                        todoData[key] = value === "true";
+                    }
+                    // Handle numeric fields
+                    else if (key === "categoryId") {
+                        const numValue = parseInt(value as string, 10);
+                        if (!Number.isNaN(numValue)) {
+                            todoData[key] = numValue;
+                        }
+                    }
+                    // Handle string fields
+                    else if (value && value !== "") {
+                        todoData[key] = value;
+                    }
+                }
+            }
+        } else {
+            // Handle JSON (without file upload)
+            todoData = await request.json();
+        }
+
+        const todo = await updateTodo(todoId, todoData, imageFile);
 
         if (!todo) {
             return NextResponse.json(
