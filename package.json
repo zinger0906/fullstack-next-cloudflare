@@ -6,6 +6,7 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
+        "wrangler:dev": " npx wrangler dev",
         "build:cf": "npx @opennextjs/cloudflare build",
         "dev:cf": "npx @opennextjs/cloudflare build && wrangler dev",
         "dev:remote": "npx @opennextjs/cloudflare build && wrangler dev --remote",
@@ -20,10 +21,12 @@
         "db:inspect:prod": "wrangler d1 execute next-cf-app --command=\"SELECT name FROM sqlite_master WHERE type='table';\"",
         "db:reset:local": "wrangler d1 execute next-cf-app --local --command=\"DROP TABLE IF EXISTS todos;\" && pnpm run db:migrate:local",
         "db:studio": "drizzle-kit studio",
+        "db:studio:local": "drizzle-kit studio --config=drizzle.local.config.ts",
         "cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts"
     },
     "dependencies": {
         "@opennextjs/cloudflare": "^1.3.0",
+        "dotenv": "^17.2.2",
         "drizzle-orm": "^0.44.5",
         "drizzle-zod": "^0.8.3",
         "next": "15.4.6",

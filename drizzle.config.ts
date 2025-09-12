@@ -1,5 +1,10 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: Ignore for this file */
+
+import { config } from "dotenv";
 import { defineConfig } from "drizzle-kit";
+
+// Load environment variables from .dev.vars for drizzle studio
+config({ path: ".dev.vars" });
 
 export default defineConfig({
     schema: "./src/lib/db/schema.ts",
