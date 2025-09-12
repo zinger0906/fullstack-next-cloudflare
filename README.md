@@ -249,7 +249,7 @@ next-cf-app/
 │   │   ├── globals.css         # Global styles
 │   │   ├── layout.tsx          # Root layout
 │   │   └── page.tsx            # Home page
-│   └── lib/
+│   └── libs/
 │       └── db/
 │           ├── index.ts        # Database connection
 │           └── schema.ts       # Database schema & types
