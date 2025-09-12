@@ -32,6 +32,13 @@ cd next-cf-app
 
 # Install dependencies
 pnpm install
+
+# Quick start development (after setting up environment and database)
+# Terminal 1: Start wrangler for local D1 database
+pnpm run wrangler:dev
+
+# Terminal 2: Start Next.js development server
+pnpm dev
 ```
 
 ## 2. Environment Setup
@@ -74,7 +81,7 @@ CLOUDFLARE_D1_TOKEN=your-api-token-here
 
 ### Option A: Use existing database (Recommended)
 
-The project is pre-configured with a D1 database. The migrations are already generated, so you just need to apply them:
+The project is pre-configured with a Cloudflare D1 database. The migrations are already generated, so you just need to apply them:
 
 ```bash
 # Apply migrations to local development database
@@ -118,26 +125,44 @@ pnpm run cf-typegen
 
 ### Start development server
 
-```bash
-# Option 1: Standard Next.js development (recommended for UI development)
-pnpm dev
+For the best development experience with both Next.js HMR and local D1 database access, you need to run two commands:
 
-# Option 2: Cloudflare Workers runtime (for testing Workers-specific features)
+**Step 1: Start Wrangler (for local D1 database)**
+```bash
+# In terminal 1: Start wrangler for local D1 database access
+pnpm run wrangler:dev
+```
+
+**Step 2: Start Next.js development server**
+```bash
+# In terminal 2: Start Next.js with HMR
+pnpm dev
+```
+
+This setup gives you:
+- ✅ Next.js HMR (Hot Module Replacement) at `http://localhost:3000`
+- ✅ Local D1 database access via Wrangler
+- ✅ Fast development iteration
+
+### Alternative development options
+
+```bash
+# Option 1: Cloudflare Workers runtime (single command, no HMR)
 pnpm run dev:cf
 
-# Option 3: Test with remote database
+# Option 2: Test with remote database
 pnpm run dev:remote
 ```
 
-The application will be available at:
-- Standard Next.js: `http://localhost:3000`
-- Cloudflare Workers: `http://localhost:8787`
+**Development URLs:**
+- Next.js with HMR: `http://localhost:3000` (recommended)
+- Cloudflare Workers runtime: `http://localhost:8787`
 
 ## 5. API Usage
 
 ### Available Endpoints
 
-The project includes a complete Todo API with the following endpoints:
+The project includes a Todo API with the following endpoints:
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -146,6 +171,8 @@ The project includes a complete Todo API with the following endpoints:
 | GET | `/api/todos/[id]` | Get a specific todo |
 | PUT | `/api/todos/[id]` | Update a todo |
 | DELETE | `/api/todos/[id]` | Delete a todo |
+
+**Note:** The PUT and DELETE endpoints for individual todos are implemented in `/api/todos/[id]/route.ts` using dynamic routes.
 
 ### Test the API
 
@@ -182,7 +209,11 @@ wrangler d1 execute next-cf-app --local --command="SELECT * FROM todos;"
 # Reset database (careful!)
 pnpm run db:reset:local
 
-# Open Drizzle Studio (database GUI)
+# Open Drizzle Studio for dev database
+pnpm run db:studio:local
+
+# Open Drizzle Studio (database GUI) for Prod database
+# Beware that you need to setup correct authentication so that Drizzle can have access to CF D1
 pnpm run db:studio
 ```
 
@@ -252,7 +283,10 @@ pnpm run db:migrate:local
 **Solution**: Run `pnpm run build:cf` before running Cloudflare dev server
 
 **Issue**: `sh: @opennextjs/cloudflare: No such file or directory`
-**Solution**: Make sure you've installed dependencies with `pnpm install`. The scripts use `pnpm exec` to run the OpenNext Cloudflare adapter.
+**Solution**: Make sure you've installed dependencies with `pnpm install`. The scripts use `npx` to run the OpenNext Cloudflare adapter.
+
+**Issue**: Drizzle Studio fails with `accountId: undefined` and `token: undefined`
+**Solution**: Make sure your `.dev.vars` file exists with correct `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_D1_TOKEN` values. The drizzle config automatically loads these environment variables.
 
 **Issue**: Database connection fails
 **Solution**: 
