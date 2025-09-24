@@ -6,7 +6,10 @@ const nextConfig: NextConfig = {
 
 export default nextConfig;
 
-// added by create cloudflare to enable calling `getCloudflareContext()` in `next dev`
-import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
-
-initOpenNextCloudflareForDev();
+// Only run during `next dev`, not during `next build`
+if (process.argv.includes("dev")) {
+    const { initOpenNextCloudflareForDev } = await import(
+        "@opennextjs/cloudflare"
+    );
+    initOpenNextCloudflareForDev();
+}
