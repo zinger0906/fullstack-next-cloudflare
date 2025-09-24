@@ -52,16 +52,16 @@ importers:
         version: 17.2.2
       drizzle-orm:
         specifier: ^0.44.5
-        version: 0.44.5(@libsql/client@0.15.15)(better-sqlite3@12.2.0)(kysely@0.28.5)
+        version: 0.44.5(@libsql/client@0.15.15)(@opentelemetry/api@1.9.0)(better-sqlite3@12.2.0)(kysely@0.28.5)
       drizzle-zod:
         specifier: ^0.8.3
-        version: 0.8.3(drizzle-orm@0.44.5(@libsql/client@0.15.15)(better-sqlite3@12.2.0)(kysely@0.28.5))(zod@4.1.8)
+        version: 0.8.3(drizzle-orm@0.44.5(@libsql/client@0.15.15)(@opentelemetry/api@1.9.0)(better-sqlite3@12.2.0)(kysely@0.28.5))(zod@4.1.8)
       lucide-react:
         specifier: ^0.544.0
         version: 0.544.0(react@19.1.0)
       next:
         specifier: 15.4.6
-        version: 15.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 15.4.6(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -1476,6 +1476,10 @@ packages:
     hasBin: true
     peerDependencies:
       wrangler: ^4.24.4
+
+  '@opentelemetry/api@1.9.0':
+    resolution: {integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==}
+    engines: {node: '>=8.0.0'}
 
   '@peculiar/asn1-android@2.5.0':
     resolution: {integrity: sha512-t8A83hgghWQkcneRsgGs2ebAlRe54ns88p7ouv8PW2tzF1nAW4yHcL4uZKrFpIU+uszIRzTkcCuie37gpkId0A==}
@@ -5551,6 +5555,9 @@ snapshots:
       - encoding
       - supports-color
 
+  '@opentelemetry/api@1.9.0':
+    optional: true
+
   '@peculiar/asn1-android@2.5.0':
     dependencies:
       '@peculiar/asn1-schema': 2.5.0
@@ -6835,15 +6842,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.44.5(@libsql/client@0.15.15)(better-sqlite3@12.2.0)(kysely@0.28.5):
+  drizzle-orm@0.44.5(@libsql/client@0.15.15)(@opentelemetry/api@1.9.0)(better-sqlite3@12.2.0)(kysely@0.28.5):
     optionalDependencies:
       '@libsql/client': 0.15.15
+      '@opentelemetry/api': 1.9.0
       better-sqlite3: 12.2.0
       kysely: 0.28.5
 
-  drizzle-zod@0.8.3(drizzle-orm@0.44.5(@libsql/client@0.15.15)(better-sqlite3@12.2.0)(kysely@0.28.5))(zod@4.1.8):
+  drizzle-zod@0.8.3(drizzle-orm@0.44.5(@libsql/client@0.15.15)(@opentelemetry/api@1.9.0)(better-sqlite3@12.2.0)(kysely@0.28.5))(zod@4.1.8):
     dependencies:
-      drizzle-orm: 0.44.5(@libsql/client@0.15.15)(better-sqlite3@12.2.0)(kysely@0.28.5)
+      drizzle-orm: 0.44.5(@libsql/client@0.15.15)(@opentelemetry/api@1.9.0)(better-sqlite3@12.2.0)(kysely@0.28.5)
       zod: 4.1.8
 
   dunder-proto@1.0.1:
@@ -7415,7 +7423,7 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  next@15.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  next@15.4.6(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@next/env': 15.4.6
       '@swc/helpers': 0.5.15
@@ -7433,6 +7441,7 @@ snapshots:
       '@next/swc-linux-x64-musl': 15.4.6
       '@next/swc-win32-arm64-msvc': 15.4.6
       '@next/swc-win32-x64-msvc': 15.4.6
+      '@opentelemetry/api': 1.9.0
       sharp: 0.34.3
     transitivePeerDependencies:
       - '@babel/core'
