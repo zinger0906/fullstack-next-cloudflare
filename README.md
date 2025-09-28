@@ -8,6 +8,9 @@ A production-ready template for building full-stack applications with Next.js 15
 
 You can read detail explanations and code architecture of this template from Devin AI on [Deepwiki](https://deepwiki.com/ifindev/fullstack-next-cloudflare).
 
+Don't forget to leave a star if you find this helpful ⭐️
+
+
 ## 🌟 Why Cloudflare + Next.js?
 
 **Cloudflare's Edge Network** provides unparalleled performance and reliability:
