@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getAuth } from "./src/lib/auth";
+import { getAuthInstance as getAuth } from "@/modules/auth/utils/auth-utils";
 
 export async function middleware(request: NextRequest) {
     try {
